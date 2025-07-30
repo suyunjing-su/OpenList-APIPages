@@ -53,20 +53,20 @@ export async function oneToken(c: Context) {
     let login_data, client_uid, client_key, random_key, server_use;
     let driver_txt, params_all, random_uid, server_url: string = driver_map[1];
     try { // 请求参数 ====================================================================
-        if (c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
+        if (c.env.PROXY_API && c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
         login_data = <string>c.req.query('code');
         random_uid = <string>c.req.query('state');
-        server_use = local.getCookie(c, 'server_use')
-        driver_txt = <string>local.getCookie(c, 'driver_txt')
-        random_key = <string>local.getCookie(c, 'random_key')
+        server_use = local.getCookie(c, 'server_use') || "";
+        driver_txt = local.getCookie(c, 'driver_txt') || "";
+        random_key = local.getCookie(c, 'random_key') || "";
         client_uid = client_key = ""
         if (server_use == "false") {
-            client_uid = <string>local.getCookie(c, 'client_uid')
-            client_key = <string>local.getCookie(c, 'client_key')
+            client_uid = local.getCookie(c, 'client_uid') || "";
+            client_key = local.getCookie(c, 'client_key') || "";
             if (!client_uid || !client_key || random_uid !== random_key || !client_uid || !client_key)
                 return c.redirect(showErr("Cookie无效", "", ""));
         }
-        driver_txt = local.getCookie(c, 'driver_txt')
+        driver_txt = local.getCookie(c, 'driver_txt') || "";
 
         params_all = {
             'client_id': server_use == "true" ? c.env.googleui_uid : client_uid,
@@ -143,7 +143,7 @@ export async function genToken(c: Context) {
     const clients_info: configs.Clients | undefined = configs.getInfo(c);
     const refresh_text: string | undefined = c.req.query('refresh_ui');
     let server_url: string = driver_map[1];
-    if (c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
+    if (c.env.PROXY_API && c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
     if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
     if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
     // 请求参数 ==========================================================================
