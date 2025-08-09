@@ -199,7 +199,7 @@ npm build-js && npm deploy-js
 
 #### 全球地址：`https://api.oplist.org/<driver>/requests`
 
-#### 国内地址：`https://api-cn.oplist.org/<driver>/requests`
+#### 国内地址：`https://api.oplist.org.cn/<driver>/requests`
 
 - #### 接口参数
 
